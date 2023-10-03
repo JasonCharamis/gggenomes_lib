@@ -51,7 +51,6 @@ visualize_clusters <- function ( gff3_file, synteny=NULL, cluster_coord = NULL, 
   ## reverse order chromosomes/species, default is to keep initial order as seen in the gff3 file
   genes <- input_check_and_read (gff3_file)
   
-  
   ## get length of each chromosome instance and sort based on length, the largest goes down
   s0 <- genes %>% group_by(seq_id) %>% summarize(length=max(end)-min(start)) %>% arrange(length) 
   
