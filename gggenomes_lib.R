@@ -23,7 +23,9 @@ dependencies <- c("tidyverse","dplyr","tibble","gggenomes")
 
 for (i in dependencies) {
   package_install(i)
-  }
+}
+
+
 
 visualize_clusters <- function ( gff3_file, synteny=NULL, cluster_coord = NULL, ... ) {
   
