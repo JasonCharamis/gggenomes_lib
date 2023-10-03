@@ -1,7 +1,29 @@
 
 ##Library to visualize genome clusters using gggenomes
+package_install <- function ( package_name ) {
+  if (requireNamespace(package_name, quietly = TRUE)) {
+    library(package_name, character.only = TRUE)
+  }
+  
+  else {
+    print ( (sprintf("%s %s",package_name, "is not installed. Installing it!")))
 
-library("gggenomes")
+    if ( package_name %in% BiocManager::available() ) {
+      BiocManager::install(package_name)
+    }
+    
+    else {
+      install.packages(package_name)
+    }
+    
+  }
+}
+
+dependencies <- c("tidyverse","dplyr","tibble","gggenomes")
+
+for (i in dependencies) {
+  package_install(i)
+  }
 
 visualize_clusters <- function ( gff3_file, synteny=NULL, cluster_coord = NULL, ... ) {
   
