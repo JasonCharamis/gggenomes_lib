@@ -65,7 +65,6 @@ visualize_clusters <- function ( gff3_file, synteny=NULL, cluster_coord = NULL, 
   }
   
   else {
-    #print ("Please provide a paf (default miniprot alignment output) file.")
     
     links <- read_paf(synteny)  ## get synteny information from miniprot alignment
     l0 <- tibble(seq_id = links$seq_id2,
