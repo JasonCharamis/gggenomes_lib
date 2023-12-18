@@ -1,4 +1,16 @@
 
+# if you don't have it
+install.packages("devtools", dependencies = TRUE) 
+
+# install gggenomes
+devtools::install_github("thackl/gggenomes")
+
+# optionally install ggtree to plot genomes next to trees
+# https://bioconductor.org/packages/release/bioc/html/ggtree.html
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("ggtree")
+
 ##Library to visualize genome clusters using gggenomes
 package_install <- function ( package_name ) {
   if (requireNamespace(package_name, quietly = TRUE)) {
