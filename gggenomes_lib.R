@@ -109,7 +109,6 @@ dependencies <- c("tidyverse",
 
 visualize_clusters <- function ( coordinate_file, 
                                  synteny=NULL, 
-                                 cluster_coord = NULL,
                                  save = TRUE,
                                  output = NULL
                                ) {
