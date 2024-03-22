@@ -131,12 +131,13 @@ visualize_clusters <- function ( coordinate_file,
   if (is.null(synteny)) {
     print ("Visualizing single clusters.")
     
-    p <- gggenomes(genes = x, links = l0) 
+    p <- gggenomes(genes = x) 
     
     plot <- p + 
             geom_seq() + # Draw contig/chromosome lines
             geom_bin_label() + # Print chromosome label
             geom_gene() # Draw genes as arrow
+    
   } else {
       links <- read_paf(synteny)  # Get synteny information from minimap2 alignment
       
@@ -166,14 +167,14 @@ visualize_clusters <- function ( coordinate_file,
   if (exists("plot")) {
     if (save == TRUE) {
       if (is.null(output)) {
-        if (typeof(tree) == "character") {
+        if (typeof(plot) == "character") {
           ggsave(plot = plot, sprintf("Genome_localization.svg", dpi = 600) )
           message <- "Plot saved as 'Genome_localization.svg'"
           print (message)
         } 
       } else {
         ggsave(plot = plot, output, dpi = 600)
-        print(paste("Tree plotted and saved as", output))
+        print(paste("Plotted and saved as", output))
       }
     } else {
       print("Plot will not be saved! Use the options save = TRUE and output = <OUTPUT_NAME> for saving the output plot.")
