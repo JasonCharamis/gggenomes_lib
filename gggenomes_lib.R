@@ -51,6 +51,7 @@
 dependencies <- c("tidyverse",
                   "dplyr",
                   "tibble",
+                  "ggplot2",
                   "gggenomes")
 
 .load_packages(dependencies)
@@ -108,7 +109,8 @@ dependencies <- c("tidyverse",
 #' @export
 
 visualize_clusters <- function ( coordinate_file, 
-                                 synteny=NULL, 
+                                 chromosome_size = NULL,
+                                 synteny = NULL, 
                                  save = TRUE,
                                  output = NULL
                                ) {
@@ -117,27 +119,27 @@ visualize_clusters <- function ( coordinate_file,
   genes <- .load_coordinate_file (coordinate_file)
   
   # Get length of each chromosome instance and sort based on length, the largest goes down
-  s0 <- genes %>% 
-        group_by(seq_id) %>% 
-        summarize( length = max(end)-min(start) ) %>% 
-        arrange(length) 
-  
-  x <- full_join(genes, s0, by ='seq_id') # Include sequence length in tibble df
-  
-  x <- x %>% # Arrange genes based on sequence length in order to print the larger after the smaller ones
-       group_by(seq_id) %>% 
-       arrange(length) 
-  
+  if (is.null(chromosome_size)) {
+      s0 <- genes %>% 
+            group_by(seq_id) %>% 
+            summarize( length = max(end)-min(start) ) %>% 
+            arrange(length)
+  } else {
+      s0 <- genes %>% 
+            group_by(seq_id) %>% 
+            summarize ( length = chromosome_size )
+  }
+      
   if (is.null(synteny)) {
     print ("Visualizing single clusters.")
     
-    p <- gggenomes(genes = x) 
+    p <- gggenomes(seqs = s0, genes = genes)
     
     plot <- p + 
-            geom_seq() + # Draw contig/chromosome lines
-            geom_bin_label() + # Print chromosome label
+            geom_seq() # Draw contig/chromosome lines
+            geom_bin_label() # Print chromosome label
             geom_gene() # Draw genes as arrow
-    
+            
   } else {
       links <- read_paf(synteny)  # Get synteny information from minimap2 alignment
       
@@ -151,16 +153,15 @@ visualize_clusters <- function ( coordinate_file,
       
       p <- gggenomes(seqs = s0, 
                      genes = x, 
-                     links = l0
-                     ) 
+                     links = l0) 
       
       plot <- p +
-        geom_seq() +         # Draw contig/chromosome lines
-        geom_bin_label() +  # Print chromosome label
-        geom_gene() +        # Draw genes as arrow
-        geom_link(aes(fill=hom), color = "snow2", offset = 0.05) +  # Draw some connections between syntenic regions
-        scale_fill_gradient(name = "Sequence Homology",low = "snow1", high = "snow2") # Color represents sequence homology 
-  }
+              geom_seq() +         # Draw contig/chromosome lines
+              geom_bin_label() +  # Print chromosome label
+              geom_gene() +        # Draw genes as arrow
+              geom_link(aes(fill=hom), color = "snow2", offset = 0.05) +  # Draw some connections between syntenic regions
+              scale_fill_gradient(name = "Sequence Homology",low = "snow1", high = "snow2") # Color represents sequence homology 
+    }
   
   
   # Export plot with provided options
