@@ -83,6 +83,10 @@ dependencies <- c("tidyverse",
     if (file.exists(coordinate_file)) {
       if (any(grepl(".bed", coordinate_file))) {
         coordinate_file_obj <- gggenomes::read_bed(coordinate_file)
+        
+        if (!is.character(coordinate_file_obj$name)) {
+          stop("name column is not character. Please provide a valid format: seq_id\tstart\tend\tname")
+        }
       } else if ( any(grepl(".gff3|.gff|.gtf", coordinate_file))) {
         coordinate_file_obj <- gggenomes::read_gff3(coordinate_file)
       } else {
@@ -184,4 +188,3 @@ visualize_clusters <- function ( coordinate_file,
     return ( plot )	
   }
 }
-
