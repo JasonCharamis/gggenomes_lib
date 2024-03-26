@@ -143,7 +143,7 @@ visualize_clusters <- function ( coordinate_file,
             geom_seq() # Draw contig/chromosome lines
             geom_bin_label() # Print chromosome label
             geom_gene() # Draw genes as arrow
-            
+             
   } else {
       links <- read_paf(synteny)  # Get synteny information from minimap2 alignment
       
